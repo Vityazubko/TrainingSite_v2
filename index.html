@@ -244,6 +244,7 @@
         <h2>📩 Надіслати повідомлення татові</h2>
         <textarea id="messageText" placeholder="Наприклад: Тату, я вже зробив фізкультуру!"></textarea>
         <button onclick="sendMessageToDad()">Надіслати татові</button>
+        <div id="debugBox" class="ok-box hidden"></div>
       </div>
     </section>
 
@@ -311,6 +312,17 @@
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
+
+    function showDebug(message, isError = false) {
+      const box = document.getElementById("debugBox");
+      if (!box) return;
+      box.classList.remove("hidden");
+      box.style.borderColor = isError ? "rgba(249, 112, 102, 0.6)" : "rgba(18, 183, 106, 0.35)";
+      box.style.background = isError ? "rgba(249, 112, 102, 0.13)" : "rgba(18, 183, 106, 0.15)";
+      box.innerHTML = message;
+    }
+
+    console.log("Firebase підключено до проєкту:", firebaseConfig.projectId);
 
     const sons = ["Вітя", "Лукян"];
     let currentRole = localStorage.getItem("role") || "";
@@ -409,19 +421,16 @@
       }
 
       try {
-        await addDoc(collection(db, "messages"), {
+        const savedMessage = await addDoc(collection(db, "messages"), {
           from: currentRole,
           text,
           type: "text",
-          createdAt: serverTimestamp()
+          createdAt: serverTimestamp(),
+          createdAtText: new Date().toLocaleString("uk-UA")
         });
 
         input.value = "";
-        alert("Повідомлення надіслано татові ✅");
-      } catch (error) {
-        console.error(error);
-        alert("Помилка Firebase: " + error.message);
-      }
+        showDebug(
     };
 
     function listenChildStatus() {
