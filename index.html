@@ -359,29 +359,43 @@
     window.sendWorkoutDone = async function() {
       if (!sons.includes(currentRole)) return;
 
-      const date = todayKey();
-      const ref = doc(db, "workouts", date, "sons", currentRole);
+      try {
+        const date = todayKey();
 
-      await setDoc(ref, {
-        name: currentRole,
-        date,
-        done: true,
-        tasks: {
-          squats: 15,
-          abs: 25,
-          pushups: 10,
-          jumps: 10,
-          laps: 5
-        },
-        updatedAt: serverTimestamp()
-      }, { merge: true });
+        // Створюємо документ дня, щоб у тата працював список по днях
+        await setDoc(doc(db, "workouts", date), {
+          date,
+          updatedAt: serverTimestamp()
+        }, { merge: true });
 
-      await addDoc(collection(db, "messages"), {
-        from: currentRole,
-        text: `${currentRole} виконав фізкультуру за ${prettyDate(date)} ✅`,
-        type: "workout",
-        createdAt: serverTimestamp()
-      });
+        const ref = doc(db, "workouts", date, "sons", currentRole);
+
+        await setDoc(ref, {
+          name: currentRole,
+          date,
+          done: true,
+          tasks: {
+            squats: 15,
+            abs: 25,
+            pushups: 10,
+            jumps: 10,
+            laps: 5
+          },
+          updatedAt: serverTimestamp()
+        }, { merge: true });
+
+        await addDoc(collection(db, "messages"), {
+          from: currentRole,
+          text: `${currentRole} виконав фізкультуру за ${prettyDate(date)} ✅`,
+          type: "workout",
+          createdAt: serverTimestamp()
+        });
+
+        alert("Виконання відправлено татові ✅");
+      } catch (error) {
+        console.error(error);
+        alert("Помилка Firebase: " + error.message);
+      }
     };
 
     window.sendMessageToDad = async function() {
@@ -393,15 +407,20 @@
         return;
       }
 
-      await addDoc(collection(db, "messages"), {
-        from: currentRole,
-        text,
-        type: "text",
-        createdAt: serverTimestamp()
-      });
+      try {
+        await addDoc(collection(db, "messages"), {
+          from: currentRole,
+          text,
+          type: "text",
+          createdAt: serverTimestamp()
+        });
 
-      input.value = "";
-      alert("Повідомлення надіслано татові ✅");
+        input.value = "";
+        alert("Повідомлення надіслано татові ✅");
+      } catch (error) {
+        console.error(error);
+        alert("Помилка Firebase: " + error.message);
+      }
     };
 
     function listenChildStatus() {
