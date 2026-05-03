@@ -5,10 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Фізкультура Віті і Лук'яна</title>
   <style>
-    * {
-      box-sizing: border-box;
-    }
-
+    * { box-sizing: border-box; }
     body {
       margin: 0;
       font-family: Arial, sans-serif;
@@ -16,13 +13,11 @@
       color: white;
       min-height: 100vh;
     }
-
     .app {
       width: min(1100px, 94%);
       margin: 0 auto;
       padding: 24px 0 50px;
     }
-
     .top {
       display: flex;
       justify-content: space-between;
@@ -30,41 +25,30 @@
       align-items: center;
       margin-bottom: 22px;
     }
-
-    .logo {
-      font-size: 28px;
-      font-weight: 900;
-    }
-
+    .logo { font-size: 28px; font-weight: 900; }
     .date-pill {
-      background: rgba(255, 255, 255, 0.12);
-      border: 1px solid rgba(255, 255, 255, 0.2);
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.2);
       padding: 10px 14px;
       border-radius: 999px;
       color: #d0d5dd;
     }
-
     .card {
-      background: rgba(255, 255, 255, 0.1);
-      border: 1px solid rgba(255, 255, 255, 0.16);
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.16);
       border-radius: 22px;
       padding: 22px;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.24);
-      backdrop-filter: blur(10px);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.24);
       margin-bottom: 18px;
     }
-
-    .hidden {
-      display: none !important;
-    }
-
-    .role-grid {
+    .hidden { display: none !important; }
+    .role-grid, .tasks, .status-grid {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
       gap: 16px;
-      margin-top: 20px;
     }
-
+    .role-grid { grid-template-columns: repeat(3, 1fr); margin-top: 20px; }
+    .tasks { grid-template-columns: repeat(5, 1fr); margin: 18px 0; }
+    .status-grid { grid-template-columns: repeat(2, 1fr); }
     button {
       border: 0;
       border-radius: 16px;
@@ -75,135 +59,62 @@
       background: #465fff;
       transition: 0.15s;
     }
-
-    button:hover {
-      transform: translateY(-1px);
-      filter: brightness(1.08);
-    }
-
+    button:hover { transform: translateY(-1px); filter: brightness(1.08); }
     button.secondary {
-      background: rgba(255, 255, 255, 0.14);
-      border: 1px solid rgba(255, 255, 255, 0.16);
+      background: rgba(255,255,255,0.14);
+      border: 1px solid rgba(255,255,255,0.16);
     }
-
-    button.danger {
-      background: #d92d20;
-    }
-
-    .tasks {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 12px;
-      margin: 18px 0;
-    }
-
-    .task {
-      background: rgba(0, 0, 0, 0.18);
-      border: 1px solid rgba(255, 255, 255, 0.14);
+    .task, .son-card, .message {
+      background: rgba(0,0,0,0.18);
+      border: 1px solid rgba(255,255,255,0.14);
+      border-radius: 18px;
       padding: 15px;
-      border-radius: 18px;
-      min-height: 92px;
     }
-
-    .task b {
-      display: block;
-      font-size: 24px;
-      margin-bottom: 6px;
-    }
-
-    .tabs {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-bottom: 16px;
-    }
-
-    .tab.active {
-      background: #12b76a;
-    }
-
-    .status-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 16px;
-    }
-
-    .son-card {
-      background: rgba(0, 0, 0, 0.16);
-      border: 1px solid rgba(255, 255, 255, 0.14);
-      border-radius: 18px;
-      padding: 18px;
-    }
-
-    .done {
-      color: #6ce9a6;
-      font-weight: 900;
-    }
-
-    .not-done {
-      color: #f97066;
-      font-weight: 900;
-    }
-
-    .history-day {
-      border-top: 1px solid rgba(255, 255, 255, 0.14);
-      padding: 14px 0;
-    }
-
-    .history-day:first-child {
-      border-top: 0;
-    }
-
-    textarea,
-    input {
+    .task b { display: block; font-size: 24px; margin-bottom: 6px; }
+    .tabs { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 16px; }
+    .tab.active { background: #12b76a; }
+    .done { color: #6ce9a6; font-weight: 900; }
+    .not-done { color: #f97066; font-weight: 900; }
+    .muted { color: #d0d5dd; }
+    textarea {
       width: 100%;
-      border: 1px solid rgba(255, 255, 255, 0.18);
-      background: rgba(0, 0, 0, 0.22);
+      border: 1px solid rgba(255,255,255,0.18);
+      background: rgba(0,0,0,0.22);
       color: white;
       border-radius: 14px;
       padding: 12px;
       font-size: 15px;
       outline: none;
       margin: 8px 0 12px;
-    }
-
-    textarea {
       min-height: 90px;
       resize: vertical;
     }
-
-    .message {
-      background: rgba(0, 0, 0, 0.18);
-      border: 1px solid rgba(255, 255, 255, 0.13);
-      border-radius: 16px;
-      padding: 14px;
-      margin-bottom: 12px;
-    }
-
-    .message small,
-    .muted {
-      color: #d0d5dd;
-    }
-
+    .message { margin-bottom: 12px; }
+    .message small { color: #d0d5dd; }
     .ok-box {
-      background: rgba(18, 183, 106, 0.15);
-      border: 1px solid rgba(18, 183, 106, 0.35);
+      background: rgba(18,183,106,0.15);
+      border: 1px solid rgba(18,183,106,0.35);
       border-radius: 16px;
       padding: 14px;
       margin-top: 14px;
+      word-break: break-word;
     }
-
+    .error-box {
+      background: rgba(249,112,102,0.14);
+      border: 1px solid rgba(249,112,102,0.5);
+      border-radius: 16px;
+      padding: 14px;
+      margin-top: 14px;
+      word-break: break-word;
+    }
+    .history-day {
+      border-top: 1px solid rgba(255,255,255,0.14);
+      padding: 14px 0;
+    }
+    .history-day:first-child { border-top: 0; }
     @media (max-width: 800px) {
-      .role-grid,
-      .tasks,
-      .status-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .top {
-        flex-direction: column;
-        align-items: flex-start;
-      }
+      .role-grid, .tasks, .status-grid { grid-template-columns: 1fr; }
+      .top { flex-direction: column; align-items: flex-start; }
     }
   </style>
 </head>
@@ -214,9 +125,11 @@
       <div class="date-pill" id="todayText"></div>
     </div>
 
+    <div id="globalError" class="error-box hidden"></div>
+
     <section id="chooseRole" class="card">
       <h1>Хто ти?</h1>
-      <p class="muted">Вибери профіль. Вітя і Лук'ян можуть відправляти виконання, а Тато бачить список і повідомлення.</p>
+      <p class="muted">Вибери профіль. Вітя і Лук'ян відправляють виконання, а Тато бачить статус і повідомлення.</p>
       <div class="role-grid">
         <button onclick="selectRole('Вітя')">Я Вітя</button>
         <button onclick="selectRole('Лукян')">Я Лук'ян</button>
@@ -262,20 +175,14 @@
       <div id="dadStatus" class="card">
         <h2>Сьогоднішнє виконання</h2>
         <div class="status-grid">
-          <div class="son-card">
-            <h2>Вітя</h2>
-            <p id="vityaToday" class="not-done">Ще не зробив</p>
-          </div>
-          <div class="son-card">
-            <h2>Лук'ян</h2>
-            <p id="lukyanToday" class="not-done">Ще не зробив</p>
-          </div>
+          <div class="son-card"><h2>Вітя</h2><p id="vityaToday" class="not-done">Ще не зробив ❌</p></div>
+          <div class="son-card"><h2>Лук'ян</h2><p id="lukyanToday" class="not-done">Ще не зробив ❌</p></div>
         </div>
       </div>
 
       <div id="dadHistory" class="card hidden">
         <h2>📅 Список кожного дня</h2>
-        <div id="historyList" class="muted">Завантаження...</div>
+        <div id="historyList" class="muted">Поки що немає днів.</div>
       </div>
 
       <div id="dadMessages" class="card hidden">
@@ -295,11 +202,11 @@
       collection,
       query,
       orderBy,
+      limit,
       onSnapshot,
       serverTimestamp
     } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
-    // 1. ЗАМІНИ ЦЕ НА СВІЙ firebaseConfig З FIREBASE
     const firebaseConfig = {
       apiKey: "AIzaSyCYMM6LX7sU1yeENMlLTglaPzm5Wf4lwq8",
       authDomain: "trainingsite-a686a.firebaseapp.com",
@@ -310,28 +217,64 @@
       measurementId: "G-B8V6S8QM32"
     };
 
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
+    let app;
+    let db;
+
+    try {
+      app = initializeApp(firebaseConfig);
+      db = getFirestore(app);
+      console.log("Firebase OK:", firebaseConfig.projectId);
+    } catch (error) {
+      showGlobalError("Firebase не підключився: " + error.message);
+    }
+
+    const sons = ["Вітя", "Лукян"];
+    let currentRole = localStorage.getItem("role") || "";
+    let unsubscribeList = [];
+
+    function todayKey() {
+      const d = new Date();
+      const year = d.getFullYear();
+      const month = String(d.getMonth() + 1).padStart(2, "0");
+      const day = String(d.getDate()).padStart(2, "0");
+      return `${year}-${month}-${day}`;
+    }
+
+    function prettyDate(dateKey) {
+      const [year, month, day] = dateKey.split("-");
+      return `${day}.${month}.${year}`;
+    }
+
+    function showGlobalError(message) {
+      const box = document.getElementById("globalError");
+      if (!box) return;
+      box.classList.remove("hidden");
+      box.innerHTML = "❌ " + message;
+    }
 
     function showDebug(message, isError = false) {
       const box = document.getElementById("debugBox");
       if (!box) return;
       box.classList.remove("hidden");
-      box.style.borderColor = isError ? "rgba(249, 112, 102, 0.6)" : "rgba(18, 183, 106, 0.35)";
-      box.style.background = isError ? "rgba(249, 112, 102, 0.13)" : "rgba(18, 183, 106, 0.15)";
+      box.className = isError ? "error-box" : "ok-box";
       box.innerHTML = message;
     }
 
-    console.log("Firebase підключено до проєкту:", firebaseConfig.projectId);
+    function stopListeners() {
+      unsubscribeList.forEach((unsub) => {
+        try { unsub(); } catch (e) {}
+      });
+      unsubscribeList = [];
+    }
 
-    const sons = ["Вітя", "Лукян"];
-    let currentRole = localStorage.getItem("role") || "";
-
-    const todayKey = () => new Date().toISOString().slice(0, 10);
-    const prettyDate = (dateKey) => {
-      const [year, month, day] = dateKey.split("-");
-      return `${day}.${month}.${year}`;
-    };
+    function safeText(text) {
+      return String(text || "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
 
     document.getElementById("todayText").textContent = `Сьогодні: ${prettyDate(todayKey())}`;
 
@@ -344,6 +287,7 @@
     window.logout = function() {
       localStorage.removeItem("role");
       currentRole = "";
+      stopListeners();
       renderRole();
     };
 
@@ -356,6 +300,13 @@
         document.getElementById("chooseRole").classList.remove("hidden");
         return;
       }
+
+      if (!db) {
+        showGlobalError("База Firebase не запустилась. Перевір firebaseConfig.");
+        return;
+      }
+
+      stopListeners();
 
       if (currentRole === "Тато") {
         document.getElementById("dadPanel").classList.remove("hidden");
@@ -370,20 +321,19 @@
     }
 
     window.sendWorkoutDone = async function() {
+      if (!db) return showGlobalError("Firebase не працює.");
       if (!sons.includes(currentRole)) return;
 
       try {
         const date = todayKey();
 
-        // Створюємо документ дня, щоб у тата працював список по днях
-        await setDoc(doc(db, "workouts", date), {
+        await setDoc(doc(db, "days", date), {
           date,
+          updatedAtText: new Date().toLocaleString("uk-UA"),
           updatedAt: serverTimestamp()
         }, { merge: true });
 
-        const ref = doc(db, "workouts", date, "sons", currentRole);
-
-        await setDoc(ref, {
+        await setDoc(doc(db, "days", date, "sons", currentRole), {
           name: currentRole,
           date,
           done: true,
@@ -394,29 +344,32 @@
             jumps: 10,
             laps: 5
           },
+          updatedAtText: new Date().toLocaleString("uk-UA"),
           updatedAt: serverTimestamp()
         }, { merge: true });
 
-        await addDoc(collection(db, "messages"), {
+        const savedMessage = await addDoc(collection(db, "messages"), {
           from: currentRole,
           text: `${currentRole} виконав фізкультуру за ${prettyDate(date)} ✅`,
           type: "workout",
+          createdAtText: new Date().toLocaleString("uk-UA"),
           createdAt: serverTimestamp()
         });
 
-        alert("Виконання відправлено татові ✅");
+        showDebug(`✅ Виконання відправлено татові. ID: ${savedMessage.id}`);
       } catch (error) {
-        console.error(error);
-        alert("Помилка Firebase: " + error.message);
+        showDebug(`❌ Не вдалося відправити: ${error.code || "помилка"}<br>${safeText(error.message)}`, true);
       }
     };
 
     window.sendMessageToDad = async function() {
+      if (!db) return showGlobalError("Firebase не працює.");
+
       const input = document.getElementById("messageText");
       const text = input.value.trim();
 
       if (!text) {
-        alert("Спочатку напиши повідомлення.");
+        showDebug("Спочатку напиши повідомлення.", true);
         return;
       }
 
@@ -425,17 +378,20 @@
           from: currentRole,
           text,
           type: "text",
-          createdAt: serverTimestamp(),
-          createdAtText: new Date().toLocaleString("uk-UA")
+          createdAtText: new Date().toLocaleString("uk-UA"),
+          createdAt: serverTimestamp()
         });
 
         input.value = "";
-        showDebug(
+        showDebug(`✅ Повідомлення надіслано татові. ID: ${savedMessage.id}`);
+      } catch (error) {
+        showDebug(`❌ Повідомлення не надіслалось: ${error.code || "помилка"}<br>${safeText(error.message)}`, true);
+      }
     };
 
     function listenChildStatus() {
-      const ref = doc(db, "workouts", todayKey(), "sons", currentRole);
-      onSnapshot(ref, (snap) => {
+      const ref = doc(db, "days", todayKey(), "sons", currentRole);
+      const unsub = onSnapshot(ref, (snap) => {
         const box = document.getElementById("childStatus");
         if (snap.exists() && snap.data().done) {
           box.classList.remove("hidden");
@@ -443,13 +399,14 @@
         } else {
           box.classList.add("hidden");
         }
-      });
+      }, (error) => showGlobalError("Помилка читання статусу: " + error.message));
+      unsubscribeList.push(unsub);
     }
 
     function listenToday() {
       sons.forEach((son) => {
-        const ref = doc(db, "workouts", todayKey(), "sons", son);
-        onSnapshot(ref, (snap) => {
+        const ref = doc(db, "days", todayKey(), "sons", son);
+        const unsub = onSnapshot(ref, (snap) => {
           const id = son === "Вітя" ? "vityaToday" : "lukyanToday";
           const el = document.getElementById(id);
 
@@ -460,58 +417,55 @@
             el.textContent = "Ще не зробив ❌";
             el.className = "not-done";
           }
-        });
+        }, (error) => showGlobalError("Помилка сьогоднішнього статусу: " + error.message));
+        unsubscribeList.push(unsub);
       });
     }
 
     function listenHistory() {
-      const q = query(collection(db, "workouts"), orderBy("date", "desc"));
-
-      onSnapshot(q, async (snapshot) => {
+      const q = query(collection(db, "days"), orderBy("date", "desc"), limit(60));
+      const unsub = onSnapshot(q, (snapshot) => {
         const history = document.getElementById("historyList");
-        const days = [];
 
-        snapshot.forEach((docSnap) => {
-          days.push(docSnap.id);
-        });
-
-        if (days.length === 0) {
+        if (snapshot.empty) {
           history.innerHTML = "Поки що немає жодного дня.";
           return;
         }
 
-        history.innerHTML = days.map((day) => `
-          <div class="history-day" id="day-${day}">
+        history.innerHTML = "";
+
+        snapshot.forEach((dayDoc) => {
+          const day = dayDoc.id;
+          const block = document.createElement("div");
+          block.className = "history-day";
+          block.innerHTML = `
             <h3>${prettyDate(day)}</h3>
-            <p>Вітя: <span class="not-done">перевіряється...</span></p>
-            <p>Лук'ян: <span class="not-done">перевіряється...</span></p>
-          </div>
-        `).join("");
+            <p id="history-${day}-vitya">Вітя: <span class="not-done">не зробив ❌</span></p>
+            <p id="history-${day}-lukyan">Лук'ян: <span class="not-done">не зробив ❌</span></p>
+          `;
+          history.appendChild(block);
 
-        days.forEach((day) => {
           sons.forEach((son) => {
-            const ref = doc(db, "workouts", day, "sons", son);
-            onSnapshot(ref, (snap) => {
-              const dayBox = document.getElementById(`day-${day}`);
-              if (!dayBox) return;
-
-              const text = snap.exists() && snap.data().done
+            const ref = doc(db, "days", day, "sons", son);
+            const childUnsub = onSnapshot(ref, (snap) => {
+              const id = son === "Вітя" ? `history-${day}-vitya` : `history-${day}-lukyan`;
+              const p = document.getElementById(id);
+              if (!p) return;
+              const status = snap.exists() && snap.data().done
                 ? `<span class="done">зробив ✅</span>`
                 : `<span class="not-done">не зробив ❌</span>`;
-
-              const paragraphs = dayBox.querySelectorAll("p");
-              const index = son === "Вітя" ? 0 : 1;
-              paragraphs[index].innerHTML = `${son}: ${text}`;
+              p.innerHTML = `${son}: ${status}`;
             });
+            unsubscribeList.push(childUnsub);
           });
         });
-      });
+      }, (error) => showGlobalError("Помилка історії: " + error.message));
+      unsubscribeList.push(unsub);
     }
 
     function listenMessages() {
-      const q = query(collection(db, "messages"), orderBy("createdAt", "desc"));
-
-      onSnapshot(q, (snapshot) => {
+      const q = query(collection(db, "messages"), orderBy("createdAt", "desc"), limit(100));
+      const unsub = onSnapshot(q, (snapshot) => {
         const list = document.getElementById("messagesList");
 
         if (snapshot.empty) {
@@ -522,17 +476,19 @@
         list.innerHTML = "";
         snapshot.forEach((docSnap) => {
           const msg = docSnap.data();
-          const time = msg.createdAt?.toDate ? msg.createdAt.toDate().toLocaleString("uk-UA") : "щойно";
+          const time = msg.createdAt?.toDate ? msg.createdAt.toDate().toLocaleString("uk-UA") : (msg.createdAtText || "щойно");
 
-          list.innerHTML += `
-            <div class="message">
-              <b>${msg.from}</b>
-              <p>${escapeHtml(msg.text)}</p>
-              <small>${time}</small>
-            </div>
+          const div = document.createElement("div");
+          div.className = "message";
+          div.innerHTML = `
+            <b>${safeText(msg.from)}</b>
+            <p>${safeText(msg.text)}</p>
+            <small>${safeText(time)}</small>
           `;
+          list.appendChild(div);
         });
-      });
+      }, (error) => showGlobalError("Помилка повідомлень: " + error.message));
+      unsubscribeList.push(unsub);
     }
 
     window.openDadTab = function(tab) {
@@ -544,15 +500,6 @@
       document.getElementById("tabHistory").classList.toggle("active", tab === "history");
       document.getElementById("tabMessages").classList.toggle("active", tab === "messages");
     };
-
-    function escapeHtml(text) {
-      return text
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;")
-        .replaceAll("'", "&#039;");
-    }
 
     renderRole();
   </script>
