@@ -337,6 +337,8 @@
           name: currentRole,
           date,
           done: true,
+          confirmed: false,
+          confirmedByDad: false,
           tasks: {
             squats: 15,
             abs: 25,
@@ -350,15 +352,40 @@
 
         const savedMessage = await addDoc(collection(db, "messages"), {
           from: currentRole,
-          text: `${currentRole} виконав фізкультуру за ${prettyDate(date)} ✅`,
+          text: `${currentRole} відправив виконання фізкультури за ${prettyDate(date)}. Очікує підтвердження тата ⏳`,
           type: "workout",
           createdAtText: new Date().toLocaleString("uk-UA"),
           createdAt: serverTimestamp()
         });
 
-        showDebug(`✅ Виконання відправлено татові. ID: ${savedMessage.id}`);
+        showDebug(`✅ Виконання відправлено татові. Тепер тато має підтвердити. ID: ${savedMessage.id}`);
       } catch (error) {
         showDebug(`❌ Не вдалося відправити: ${error.code || "помилка"}<br>${safeText(error.message)}`, true);
+      }
+    };
+
+    window.confirmWorkout = async function(son) {
+      if (!db) return showGlobalError("Firebase не працює.");
+      if (currentRole !== "Тато") return;
+
+      try {
+        const date = todayKey();
+        await setDoc(doc(db, "days", date, "sons", son), {
+          confirmed: true,
+          confirmedByDad: true,
+          confirmedAtText: new Date().toLocaleString("uk-UA"),
+          confirmedAt: serverTimestamp()
+        }, { merge: true });
+
+        await addDoc(collection(db, "messages"), {
+          from: "Тато",
+          text: `Тато підтвердив фізкультуру: ${son} за ${prettyDate(date)} ✅`,
+          type: "confirm",
+          createdAtText: new Date().toLocaleString("uk-UA"),
+          createdAt: serverTimestamp()
+        });
+      } catch (error) {
+        showGlobalError("Не вдалося підтвердити: " + error.message);
       }
     };
 
@@ -395,7 +422,12 @@
         const box = document.getElementById("childStatus");
         if (snap.exists() && snap.data().done) {
           box.classList.remove("hidden");
-          box.innerHTML = `✅ ${currentRole}, сьогодні ти вже відправив виконання татові.`;
+          const data = snap.data();
+          if (data.confirmedByDad) {
+            box.innerHTML = `✅ ${currentRole}, тато підтвердив фізкультуру. Ти точно зробив!`;
+          } else {
+            box.innerHTML = `⏳ ${currentRole}, ти відправив виконання. Тепер чекаємо підтвердження тата.`;
+          }
         } else {
           box.classList.add("hidden");
         }
@@ -411,10 +443,16 @@
           const el = document.getElementById(id);
 
           if (snap.exists() && snap.data().done) {
-            el.textContent = "Зробив ✅";
-            el.className = "done";
+            const data = snap.data();
+            if (data.confirmedByDad) {
+              el.innerHTML = "Підтверджено татом ✅";
+              el.className = "done";
+            } else {
+              el.innerHTML = `Очікує підтвердження ⏳<br><br><button onclick="confirmWorkout('${son}')">Підтвердити виконання</button>`;
+              el.className = "muted";
+            }
           } else {
-            el.textContent = "Ще не зробив ❌";
+            el.textContent = "Ще не відправив ❌";
             el.className = "not-done";
           }
         }, (error) => showGlobalError("Помилка сьогоднішнього статусу: " + error.message));
@@ -451,9 +489,13 @@
               const id = son === "Вітя" ? `history-${day}-vitya` : `history-${day}-lukyan`;
               const p = document.getElementById(id);
               if (!p) return;
-              const status = snap.exists() && snap.data().done
-                ? `<span class="done">зробив ✅</span>`
-                : `<span class="not-done">не зробив ❌</span>`;
+              let status = `<span class="not-done">не відправив ❌</span>`;
+              if (snap.exists() && snap.data().done) {
+                const data = snap.data();
+                status = data.confirmedByDad
+                  ? `<span class="done">підтверджено татом ✅</span>`
+                  : `<span class="muted">очікує підтвердження ⏳</span>`;
+              }
               p.innerHTML = `${son}: ${status}`;
             });
             unsubscribeList.push(childUnsub);
