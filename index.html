@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Фізкультура Віті і Лук'яна</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #101828, #1d2939);
+      color: white;
+      min-height: 100vh;
+    }
+
+    .app {
+      width: min(1100px, 94%);
+      margin: 0 auto;
+      padding: 24px 0 50px;
+    }
+
+    .top {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: center;
+      margin-bottom: 22px;
+    }
+
+    .logo {
+      font-size: 28px;
+      font-weight: 900;
+    }
+
+    .date-pill {
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 10px 14px;
+      border-radius: 999px;
+      color: #d0d5dd;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: 22px;
+      padding: 22px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.24);
+      backdrop-filter: blur(10px);
+      margin-bottom: 18px;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .role-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 20px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 16px;
+      padding: 13px 16px;
+      font-weight: 800;
+      cursor: pointer;
+      color: white;
+      background: #465fff;
+      transition: 0.15s;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.08);
+    }
+
+    button.secondary {
+      background: rgba(255, 255, 255, 0.14);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+    }
+
+    button.danger {
+      background: #d92d20;
+    }
+
+    .tasks {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+      margin: 18px 0;
+    }
+
+    .task {
+      background: rgba(0, 0, 0, 0.18);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      padding: 15px;
+      border-radius: 18px;
+      min-height: 92px;
+    }
+
+    .task b {
+      display: block;
+      font-size: 24px;
+      margin-bottom: 6px;
+    }
+
+    .tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .tab.active {
+      background: #12b76a;
+    }
+
+    .status-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+
+    .son-card {
+      background: rgba(0, 0, 0, 0.16);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 18px;
+      padding: 18px;
+    }
+
+    .done {
+      color: #6ce9a6;
+      font-weight: 900;
+    }
+
+    .not-done {
+      color: #f97066;
+      font-weight: 900;
+    }
+
+    .history-day {
+      border-top: 1px solid rgba(255, 255, 255, 0.14);
+      padding: 14px 0;
+    }
+
+    .history-day:first-child {
+      border-top: 0;
+    }
+
+    textarea,
+    input {
+      width: 100%;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      background: rgba(0, 0, 0, 0.22);
+      color: white;
+      border-radius: 14px;
+      padding: 12px;
+      font-size: 15px;
+      outline: none;
+      margin: 8px 0 12px;
+    }
+
+    textarea {
+      min-height: 90px;
+      resize: vertical;
+    }
+
+    .message {
+      background: rgba(0, 0, 0, 0.18);
+      border: 1px solid rgba(255, 255, 255, 0.13);
+      border-radius: 16px;
+      padding: 14px;
+      margin-bottom: 12px;
+    }
+
+    .message small,
+    .muted {
+      color: #d0d5dd;
+    }
+
+    .ok-box {
+      background: rgba(18, 183, 106, 0.15);
+      border: 1px solid rgba(18, 183, 106, 0.35);
+      border-radius: 16px;
+      padding: 14px;
+      margin-top: 14px;
+    }
+
+    @media (max-width: 800px) {
+      .role-grid,
+      .tasks,
+      .status-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .top {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="top">
+      <div class="logo">🏃‍♂️ Сімейна фізкультура</div>
+      <div class="date-pill" id="todayText"></div>
+    </div>
+
+    <section id="chooseRole" class="card">
+      <h1>Хто ти?</h1>
+      <p class="muted">Вибери профіль. Вітя і Лук'ян можуть відправляти виконання, а Тато бачить список і повідомлення.</p>
+      <div class="role-grid">
+        <button onclick="selectRole('Вітя')">Я Вітя</button>
+        <button onclick="selectRole('Лукян')">Я Лук'ян</button>
+        <button onclick="selectRole('Тато')">Я Тато</button>
+      </div>
+    </section>
+
+    <section id="childPanel" class="hidden">
+      <div class="card">
+        <button class="secondary" onclick="logout()">← Змінити користувача</button>
+        <h1 id="childTitle">Фізкультура</h1>
+        <p class="muted">Завдання на сьогодні:</p>
+        <div class="tasks">
+          <div class="task"><b>15</b>присідань</div>
+          <div class="task"><b>25</b>пресів</div>
+          <div class="task"><b>10</b>віджимань</div>
+          <div class="task"><b>10</b>підстрибувань</div>
+          <div class="task"><b>5</b>кіл</div>
+        </div>
+        <button onclick="sendWorkoutDone()">✅ Я зробив фізкультуру</button>
+        <div id="childStatus" class="ok-box hidden"></div>
+      </div>
+
+      <div class="card">
+        <h2>📩 Надіслати повідомлення татові</h2>
+        <textarea id="messageText" placeholder="Наприклад: Тату, я вже зробив фізкультуру!"></textarea>
+        <button onclick="sendMessageToDad()">Надіслати татові</button>
+      </div>
+    </section>
+
+    <section id="dadPanel" class="hidden">
+      <div class="card">
+        <button class="secondary" onclick="logout()">← Змінити користувача</button>
+        <h1>Панель тата</h1>
+        <div class="tabs">
+          <button id="tabStatus" class="tab active" onclick="openDadTab('status')">Сьогодні</button>
+          <button id="tabHistory" class="tab" onclick="openDadTab('history')">Список по днях</button>
+          <button id="tabMessages" class="tab" onclick="openDadTab('messages')">Повідомлення</button>
+        </div>
+      </div>
+
+      <div id="dadStatus" class="card">
+        <h2>Сьогоднішнє виконання</h2>
+        <div class="status-grid">
+          <div class="son-card">
+            <h2>Вітя</h2>
+            <p id="vityaToday" class="not-done">Ще не зробив</p>
+          </div>
+          <div class="son-card">
+            <h2>Лук'ян</h2>
+            <p id="lukyanToday" class="not-done">Ще не зробив</p>
+          </div>
+        </div>
+      </div>
+
+      <div id="dadHistory" class="card hidden">
+        <h2>📅 Список кожного дня</h2>
+        <div id="historyList" class="muted">Завантаження...</div>
+      </div>
+
+      <div id="dadMessages" class="card hidden">
+        <h2>📨 Повідомлення для тата</h2>
+        <div id="messagesList" class="muted">Повідомлень ще немає.</div>
+      </div>
+    </section>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+    import {
+      getFirestore,
+      doc,
+      setDoc,
+      addDoc,
+      collection,
+      query,
+      orderBy,
+      onSnapshot,
+      serverTimestamp
+    } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+
+    // 1. ЗАМІНИ ЦЕ НА СВІЙ firebaseConfig З FIREBASE
+    const firebaseConfig = {
+      apiKey: "ВСТАВ_СЮДИ",
+      authDomain: "ВСТАВ_СЮДИ",
+      projectId: "ВСТАВ_СЮДИ",
+      storageBucket: "ВСТАВ_СЮДИ",
+      messagingSenderId: "ВСТАВ_СЮДИ",
+      appId: "ВСТАВ_СЮДИ"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    const sons = ["Вітя", "Лукян"];
+    let currentRole = localStorage.getItem("role") || "";
+
+    const todayKey = () => new Date().toISOString().slice(0, 10);
+    const prettyDate = (dateKey) => {
+      const [year, month, day] = dateKey.split("-");
+      return `${day}.${month}.${year}`;
+    };
+
+    document.getElementById("todayText").textContent = `Сьогодні: ${prettyDate(todayKey())}`;
+
+    window.selectRole = function(role) {
+      currentRole = role;
+      localStorage.setItem("role", role);
+      renderRole();
+    };
+
+    window.logout = function() {
+      localStorage.removeItem("role");
+      currentRole = "";
+      renderRole();
+    };
+
+    function renderRole() {
+      document.getElementById("chooseRole").classList.add("hidden");
+      document.getElementById("childPanel").classList.add("hidden");
+      document.getElementById("dadPanel").classList.add("hidden");
+
+      if (!currentRole) {
+        document.getElementById("chooseRole").classList.remove("hidden");
+        return;
+      }
+
+      if (currentRole === "Тато") {
+        document.getElementById("dadPanel").classList.remove("hidden");
+        listenToday();
+        listenHistory();
+        listenMessages();
+      } else {
+        document.getElementById("childPanel").classList.remove("hidden");
+        document.getElementById("childTitle").textContent = `${currentRole}: фізкультура на сьогодні`;
+        listenChildStatus();
+      }
+    }
+
+    window.sendWorkoutDone = async function() {
+      if (!sons.includes(currentRole)) return;
+
+      const date = todayKey();
+      const ref = doc(db, "workouts", date, "sons", currentRole);
+
+      await setDoc(ref, {
+        name: currentRole,
+        date,
+        done: true,
+        tasks: {
+          squats: 15,
+          abs: 25,
+          pushups: 10,
+          jumps: 10,
+          laps: 5
+        },
+        updatedAt: serverTimestamp()
+      }, { merge: true });
+
+      await addDoc(collection(db, "messages"), {
+        from: currentRole,
+        text: `${currentRole} виконав фізкультуру за ${prettyDate(date)} ✅`,
+        type: "workout",
+        createdAt: serverTimestamp()
+      });
+    };
+
+    window.sendMessageToDad = async function() {
+      const input = document.getElementById("messageText");
+      const text = input.value.trim();
+
+      if (!text) {
+        alert("Спочатку напиши повідомлення.");
+        return;
+      }
+
+      await addDoc(collection(db, "messages"), {
+        from: currentRole,
+        text,
+        type: "text",
+        createdAt: serverTimestamp()
+      });
+
+      input.value = "";
+      alert("Повідомлення надіслано татові ✅");
+    };
+
+    function listenChildStatus() {
+      const ref = doc(db, "workouts", todayKey(), "sons", currentRole);
+      onSnapshot(ref, (snap) => {
+        const box = document.getElementById("childStatus");
+        if (snap.exists() && snap.data().done) {
+          box.classList.remove("hidden");
+          box.innerHTML = `✅ ${currentRole}, сьогодні ти вже відправив виконання татові.`;
+        } else {
+          box.classList.add("hidden");
+        }
+      });
+    }
+
+    function listenToday() {
+      sons.forEach((son) => {
+        const ref = doc(db, "workouts", todayKey(), "sons", son);
+        onSnapshot(ref, (snap) => {
+          const id = son === "Вітя" ? "vityaToday" : "lukyanToday";
+          const el = document.getElementById(id);
+
+          if (snap.exists() && snap.data().done) {
+            el.textContent = "Зробив ✅";
+            el.className = "done";
+          } else {
+            el.textContent = "Ще не зробив ❌";
+            el.className = "not-done";
+          }
+        });
+      });
+    }
+
+    function listenHistory() {
+      const q = query(collection(db, "workouts"), orderBy("date", "desc"));
+
+      onSnapshot(q, async (snapshot) => {
+        const history = document.getElementById("historyList");
+        const days = [];
+
+        snapshot.forEach((docSnap) => {
+          days.push(docSnap.id);
+        });
+
+        if (days.length === 0) {
+          history.innerHTML = "Поки що немає жодного дня.";
+          return;
+        }
+
+        history.innerHTML = days.map((day) => `
+          <div class="history-day" id="day-${day}">
+            <h3>${prettyDate(day)}</h3>
+            <p>Вітя: <span class="not-done">перевіряється...</span></p>
+            <p>Лук'ян: <span class="not-done">перевіряється...</span></p>
+          </div>
+        `).join("");
+
+        days.forEach((day) => {
+          sons.forEach((son) => {
+            const ref = doc(db, "workouts", day, "sons", son);
+            onSnapshot(ref, (snap) => {
+              const dayBox = document.getElementById(`day-${day}`);
+              if (!dayBox) return;
+
+              const text = snap.exists() && snap.data().done
+                ? `<span class="done">зробив ✅</span>`
+                : `<span class="not-done">не зробив ❌</span>`;
+
+              const paragraphs = dayBox.querySelectorAll("p");
+              const index = son === "Вітя" ? 0 : 1;
+              paragraphs[index].innerHTML = `${son}: ${text}`;
+            });
+          });
+        });
+      });
+    }
+
+    function listenMessages() {
+      const q = query(collection(db, "messages"), orderBy("createdAt", "desc"));
+
+      onSnapshot(q, (snapshot) => {
+        const list = document.getElementById("messagesList");
+
+        if (snapshot.empty) {
+          list.innerHTML = "Повідомлень ще немає.";
+          return;
+        }
+
+        list.innerHTML = "";
+        snapshot.forEach((docSnap) => {
+          const msg = docSnap.data();
+          const time = msg.createdAt?.toDate ? msg.createdAt.toDate().toLocaleString("uk-UA") : "щойно";
+
+          list.innerHTML += `
+            <div class="message">
+              <b>${msg.from}</b>
+              <p>${escapeHtml(msg.text)}</p>
+              <small>${time}</small>
+            </div>
+          `;
+        });
+      });
+    }
+
+    window.openDadTab = function(tab) {
+      document.getElementById("dadStatus").classList.toggle("hidden", tab !== "status");
+      document.getElementById("dadHistory").classList.toggle("hidden", tab !== "history");
+      document.getElementById("dadMessages").classList.toggle("hidden", tab !== "messages");
+
+      document.getElementById("tabStatus").classList.toggle("active", tab === "status");
+      document.getElementById("tabHistory").classList.toggle("active", tab === "history");
+      document.getElementById("tabMessages").classList.toggle("active", tab === "messages");
+    };
+
+    function escapeHtml(text) {
+      return text
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    renderRole();
+  </script>
+</body>
+</html>
